@@ -1,63 +1,56 @@
-def add_expense():
-    category = input("Enter the category of the item(like food, travel, clothing, etc): ")
-    description = input("Enter a short description: ")
+import datetime
 
-    try:
-        amount = float(input("Enter the amount spent:"))
+class Expense:
+    def __init__(self, category, description, amount, date=None):
+        self.category = category
+        self.description = description
+        self.amount = amount
+        self.date = date if date else datetime.date.today().strftime("%Y-%m-%d")
 
-        with open("expenses.csv", 'a') as file:
-            file.write(f"{category}, {description}, {amount}\n")
+    def to_csv(self):
+        return f"{self.date}, {self.category}, {self.description}, {self.amount}\n"
 
-    except ValueError:
-        print("Invalid input for amount. Please enter a valid number.")
+class Tracker:
+    def __init__(self, filename = "expenses.csv"):
+        self.filename = filename
+        self.expenses = []
+        self.load_from_file()
+
+    def add_expense(self, expense_obj):
+        self.expenses.append(expense_obj)
+        self.save_to_file(expense_obj)
+
+    def save_to_file(self, expense_obj):
+        with open(self.filename, 'a') as file:
+            file.write(expense_obj.to_csv() + "\n")
+
+    def load_from_file(self):
+        try:
+            with open(self.filename, 'r') as file:
+                for line in file:
+                    parts = line.strip().split(',')
+                    if len(parts) == 4:
+                        date, category, description, amount = parts
+                        new_expense = Expense(category, description, amount, date)
+                        self.expenses.append(new_expense)
 
 
-def view_expenses():
-    try:
-        with open('expenses.csv','r') as file:
-            print()
-            print("*" * 65)
-            print("Category, Description, Amount")
-            print("*" * 65)
-            total = 0
-            for line in file:
-                data = line.strip().split(',')
+        except FileNotFoundError:
+            print("No such file exists. You can create one by adding an expense.")
 
-                if len(data) == 3:
-                    category, description, amount = data
-                    print(f"Category: {category:<15} | {description:<30} | Amount: {amount}")
-                    total += float(amount)
 
-                print("*" * 65)
-            print(f"Total Expenses: {total}")
+    def view_expenses(self):
+        print()
+        print("*" * 65)
+        print("Date, Category, Description, Amount")
+        print("*" * 65)
+        total = 0
+        for expense in self.expenses:
+            print(f"{expense.date}, {expense.category}, {expense.description}, {expense.amount}")
+            total += float(expense.amount)
 
-    except FileNotFoundError:
-        print("No expenses found. Please add some expenses first.")
-
-def search_by_category():
-    category_to_be_searched = input("Enter the category you want to search:").strip().lower()
-
-    try:
-        with open('expenses.csv', 'r') as file:
-            print()
-            print('*' * 65)
-            print(f"Expenses in category: {category_to_be_searched}")
-            print('*' * 65)
-            category_total = 0
-            for line in file:
-                data = line.strip().split(',')
-                if len(data) == 3:
-                    category, description, amount = data
-                    if category.strip().lower() == category_to_be_searched:
-                        print(f"{category:<15} | {description:<30} | Amount: {amount}")
-                        category_total += float(amount)
-
-            print('*' * 65)
-            print(f"Total for category '{category_to_be_searched}': {category_total}")
-
-    except FileNotFoundError:
-        print("No data found in the file.")
-
+        print("*" * 65)
+        print(f"Total Expenses: {total}")
 
 def main():
     while True:
