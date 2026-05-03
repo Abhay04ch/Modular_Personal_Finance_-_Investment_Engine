@@ -1,0 +1,1 @@
+This is the personal finance and investment tracker app, that I am making through my own, with little help from Gemini, and rest on my coding skills, trying to make something cool.
