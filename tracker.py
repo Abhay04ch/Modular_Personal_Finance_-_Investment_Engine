@@ -53,36 +53,43 @@ class Tracker:
         print(f"Total Expenses: {total}")
 
 def main():
+
+    tracker = Tracker()
+
     while True:
-        print("*" * 65)
-        print("This is the tracker App")
+        print("\n" + "*" * 65)
+        print("PERSONAL FINANCE APP")
         print("*" * 65)
         print("1. Add a new item")
         print("2. View existing items")
-        print("3. Search for expenses by category")
-        print("4. Exit")
+        # print("3. Search for expenses by category")
+        print("3. Exit")
         print("-" * 65)
         print()
 
-        choice = int(input("Enter your choice (1-4): "))
+        try:
+            choice = int(input("Enter your choice (1-3): "))
 
-        if choice == 1:
-            print("Adding a new expense:")
-            add_expense()
-            # print()
-        elif choice == 2:
-            print("Viewing existing items:")
-            view_expenses()
-            # print()
-        elif choice == 3:
-            print("Searching for expenses by category:")
-            search_by_category()
-            # print()
-        elif choice == 4:
-            print("Exit the tracker app. Thank you for visiting!")
-            break
-        else:
-            print("Invalid choice. Please enter a valid option (1-4).")
+            if choice == 1:
+                print("Adding a new expense:")
+                tracker.add_expense()
+                # print()
+            elif choice == 2:
+                print("Viewing existing items:")
+                tracker.view_expenses()
+                # print()
+            # elif choice == 3:
+            #     print("Searching for expenses by category:")
+            #     search_by_category()
+                # print()
+            elif choice == 3:
+                print("Exit the tracker app. Thank you for visiting!")
+                break
+            else:
+                print("Invalid choice. Please enter a valid option (1-3).")
+
+        except ValueError:
+            print("Invalid Input.")
 
 if __name__ == "__main__":
     main()
